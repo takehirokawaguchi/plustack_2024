@@ -1,0 +1,357 @@
+// Place all the styles related to the posts controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+@import "application";
+
+//投稿フォームなどの背景
+@mixin modal {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #fbfbfb;
+  border-radius: 6px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+}
+
+// 上と同様
+@mixin form {
+  background-color:rgba(251,251,251,0.7);
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+//post#index
+//投稿ボタン
+.fixed_btn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  padding: 6px 40px;
+  display: inline-block;
+  text-decoration: none;
+  background: #08FFC8;
+  color: #FFF;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  border-radius: 50%;
+  text-align: center;
+  overflow: hidden;
+  transition: .4s;
+  display: inline-block;
+  z-index: 4;
+
+  i {
+    font-size: 32px;
+  }
+
+  &:hover {
+    opacity: 0.7;
+    transition: all 0.5s;
+    color: #FFF;
+  }
+}
+
+//検索フォーム
+.search_form {
+  text-align: center;
+}
+
+//進行中の目標
+.tasks-container {
+  margin-top: 40px;
+
+  .tasks {
+    @include form;
+    text-align: center;
+
+
+    h3 {
+      border-bottom: 1px solid #08FFC8;
+    }
+
+    table {
+      margin: 0 auto;
+      border-collapse: separate;
+      border-spacing: 10px 10px;
+
+      .badge {
+        color: #fff;
+      }
+    }
+  }
+
+  .tasks_description {
+    text-align: center;
+  }
+
+  .encourage_login {
+    text-align: center;
+  }
+
+  .show_all_tasks {
+    text-align: center;
+    a {
+      width: 40%;
+    }
+  }
+}
+
+//タグ一覧
+.tags_container {
+
+  margin-top: 40px;
+
+  .tag_form {
+    @include form;
+
+    h3 {
+      border-bottom: 1px solid #08FFC8;
+    }
+
+    .tags {
+      padding: 10px 0;
+    }
+  }
+
+}
+
+//複数箇所で使うため、あえてtags_containerから外している
+.tag {
+  background: #DADADA;
+  border: 1px solid #B0B0B0;
+  padding: 3px;
+  margin: 3px;
+  word-break: keep-all;
+}
+
+
+//投稿一覧
+.right_container {
+
+  margin-top: 40px;
+
+  .post {
+    @include modal;
+    position: relative;
+    z-index: 1;
+    text-align: left;
+
+    a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-indent:-999px;
+    z-index: 2; /* 必要であればリンク要素の重なりのベース順序指定 */
+    }
+
+    .link {
+      position: relative; /*「別リンク」は普通に配置するため */
+      z-index: 3; /* リンク要素の重なり順を上にするため */
+    }
+
+    // 投稿の方のタグ
+    .tags {
+      margin-top: 10px;
+    }
+
+    .small-margin {
+      display: block;
+      margin-top: 3px;
+    }
+
+    .user_name {
+      margin-left: 10px;
+      font-size: 24px;
+      font-style: bold;
+      color: #000;
+    }
+
+    .post_middle {
+      border-bottom: 1px solid #08FFC8;
+      padding-bottom: 10px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .post_bottom {
+      padding-bottom: 20px;
+      position: relative;
+
+      .post_bottom_left {
+        display: flex;
+        position: absolute;
+        left: 0;
+        margin-right: 2px;
+
+        .far {
+          margin-left: 2px;
+        }
+      }
+
+      .post_bottom_right {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+}
+
+// post#new,edit
+.new_post, .edit_post {
+  @include form;
+  width: 80%;
+
+  h3 {
+    border-bottom: 1px solid #08FFC8;
+    padding-bottom: 10px;
+  }
+
+  p {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  // 入力フォーム共通
+  input[type="text"] {
+    width: 80%;
+  }
+
+
+  .input_content {
+
+    textarea {
+      width: 80%;
+      padding-bottom: 30px;
+    }
+
+    input[type="submit"] {
+      @include delete_default;
+    }
+  }
+
+  .btn {
+    margin-top: 10px;
+  }
+}
+
+// post#show
+.show_description {
+  text-align: center;
+}
+
+.show_post {
+  @include modal;
+  width: 80%;
+  padding-bottom: 70px;
+
+  // 投稿の方のタグ
+  .tags {
+    margin-top: 10px;
+  }
+
+  .user_name {
+    margin-left: 10px;
+    font-size: 24px;
+    font-style: bold;
+    color: #000;
+  }
+
+  .post_middle {
+    border-bottom: 1px solid #08FFC8;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .post_bottom {
+    padding-bottom: 20px;
+    position: relative;
+
+    .post_bottom_left {
+      display: flex;
+      position: absolute;
+      left: 0;
+      margin-right: 2px;
+
+      .far {
+        margin-left: 2px;
+      }
+    }
+
+    .post_bottom_right {
+      position: absolute;
+      right: 0;
+    }
+  }
+
+  .action_buttons {
+    padding-top: 20px;
+    display: flex;
+    position: absolute;
+    right: 11%;
+
+    .btn-info {
+      margin-right: 5px;
+    }
+  }
+}
+
+.comment-post {
+  text-align: center;
+
+  .comment-form {
+    @include form;
+    width: 80%;
+
+    textarea {
+      width: 90%;
+    }
+  }
+
+  .show_comments_description {
+    margin-top: 10px;
+  }
+
+  .comment {
+    @include modal;
+    text-align: left;
+    width: 80%;
+
+    .user_name {
+      margin-left: 10px;
+      font-size: 24px;
+      font-style: bold;
+      color: #000;
+    }
+
+    .comment_middle {
+      border-bottom: 1px solid #08FFC8;
+      padding-bottom: 10px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .comment_bottom {
+      padding-bottom: 20px;
+      position: relative;
+
+      .commented_time {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+}
+
+@media screen and (max-width:768px) {
+
+  .new_post, .edit_post {
+    width: 100%;
+  }
+}

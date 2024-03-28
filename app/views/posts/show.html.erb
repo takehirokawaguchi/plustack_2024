@@ -1,0 +1,71 @@
+<h3 class="show_description">投稿詳細</h3>
+<div class="show_post">
+  <div class="post_top">
+    <% if @post.user.image? %>
+      <a class="link" href="/users/<%= @post.user.id %>"><%= image_tag @post.user.image.url, class: "icon_image" %></a>
+    <% else %>
+      <a class="link" href="/users/<%= @post.user.id %>"><%= image_tag "default_user.png", class: "icon_image" %></a>
+    <% end %>
+      <a class="link user_name" href="/users/<%= @post.user.id %>"><%= @post.user.name %></a>
+  </div>
+  <% if @tags.present? %>
+    <div class="tags">
+      <% @post.tag_list.each do |t| %>
+        <%= link_to "#{t}", posts_path(tag: "#{t}"), class: "tag link" %>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="post_middle link"><%= @post.body %></div>
+  <div class="post_bottom">
+    <div class="post_bottom_left">
+      <div id="likes_buttons_<%= @post.id %>">
+        <%= render partial: 'likes/like', locals: { post: @post} %>
+      </div>
+      <% if user_signed_in? %>
+        <%= button_to post_path(@post.id), method: :get, class: "link" do %>
+          <i class="far fa-comments"></i><%= @post.comments.count %>
+        <% end %>
+      <% else %>
+        <i class="far fa-comments"></i><%= @post.comments.count %>
+      <% end %>
+    </div>
+    <div class="post_bottom_right">
+      <div class="posted_time"><%= time_ago_in_words(@post.created_at)+"前" %></div>
+    </div>
+  </div>
+  <div class="action_buttons">
+    <% if current_user.id == @post.user_id %>
+      <%= link_to "編集する", edit_post_path(@post.id),class: "btn btn-info" %>
+      <%= button_to "削除する", post_path(@post.id), method: :delete, class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="comment-post">
+  <h3 class="comment_description">コメント</h3>
+  <div class="comment-form">
+    <% if user_signed_in? %>
+      <%= form_with(model: [@post, @comment], local: true) do |f| %>
+        <%= f.text_area :content, placeholder: "コメントを入力" %><br>
+        <%= button_tag "コメントする", type: "submit" ,class:"btn btn-success" %>
+      <% end %>
+    <% end %>
+  </div>
+  <h3 class="show_comments_description">コメント一覧</h3>
+  <% @comments.each do |c| %>
+    <div class="comment">
+      <div class="comment_top">
+        <% if c.user.image? %>
+          <a class="link" href="/users/<%= c.user.id %>"><%= image_tag c.user.image.url, class: "icon_image" %></a>
+        <% else %>
+          <a class="link" href="/users/<%= c.user.id %>"><%= image_tag "default_user.png", class: "icon_image" %></a>
+        <% end %>
+        <a class="link user_name" href="/users/<%= c.user.id %>"><%= c.user.name %></a>
+      </div>
+      <div class="comment_middle"><%= c.content %></div>
+      <div class="comment_bottom">
+        <div class="commented_time"><%= time_ago_in_words(c.created_at)+"前" %></div>
+      </div>
+    </div>
+  <% end %>
+</div>

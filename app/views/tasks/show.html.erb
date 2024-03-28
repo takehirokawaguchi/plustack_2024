@@ -1,0 +1,24 @@
+<form method="POST" action="/tasks/<%= @task.id %>" class="edit_task">
+  <input type="hidden" name="_method" value="PUT">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <h2>目標の編集</h2>
+  <div>
+    <label for="task">目標：</label>
+    <input value="<%= @task.task %>" id="target" name="task" type="text" required>
+  </div>
+  <div>
+    <label>状態：</label>
+    <select name="state">
+      <% @status.each_with_index do |s,i| %>
+      <option value="<%= s %>"><%= s %></option>
+      <% end %>
+    </select>
+  </div>
+  <div>
+    <label>期限：</label>
+    <input type="date" name="limit_date" required>
+  </div>
+  <p>
+    <button type="submit" class="update_task_btn btn btn-info">更新</button>
+  </p>
+</form>

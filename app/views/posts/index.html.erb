@@ -1,0 +1,116 @@
+<a class="fixed_btn" href="/posts/new"><i class="fas fa-pen"></i></a>
+
+<div class="search_form">
+  <h2>投稿を検索</h2>
+  <%= form_tag({controller:"posts",action:"index"}, method: :get) do %>
+  <%= text_field_tag :search %>
+  <%= submit_tag '🔎', class: "search_button"  %>
+  <% end %>
+</div>
+
+<div class="row">
+  <div class="left_container offset-md-1 col-md-4">
+    <div class="tasks-container">
+      <% if user_signed_in? %>
+      <div class="tasks">
+        <h3>進行中の目標</h3>
+        <% tasks_progress = @tasks.select do |f| %>
+        <% f.state == '進行中' && current_user.id == f.user_id  %>
+        <% end %>
+        <%# ユーザーの進行中の目標が存在するとき %>
+        <% if tasks_progress.present? %>
+        <table>
+          <thead>
+            <tr>
+              <th>目標</th>
+              <th>期限</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% tasks_progress.each do |t| %>
+            <tr>
+              <td><%= t.task %></td>
+              <td><%= t.limit_date %></td>
+              <td><a href="/tasks/<%= t.id %>" class="btn btn-info">編集<i class="far fa-edit"></i></a></td>
+            </tr>
+            <% end %>
+        <% else %>
+          <p>進行中の目標がありません。</p>
+        <% end %>
+          </tbody>
+        </table>
+        <div class="show_all_tasks"><a href="/tasks">すべての目標を見る</a></div>
+      </div>
+      <% else %>
+      <div class="tasks">
+        <h3 class="tasks_description">進行中の目標</h3>
+        <div class="encourage_login"><a href="/users/sign_in">ログイン</a>すると、目標を設定できるようになります。</div>
+      </div>
+      <% end %>
+    </div>
+    <div class="tags_container">
+      <div class="tag_form">
+        <h3>タグ一覧</h3>
+        <% if @tags.present? %>
+        <div class="tags">
+          <% @tags.each do |tag| %>
+          <%= link_to posts_path(tag: tag.name), class: "tag" do %>
+          <%= "#{tag.name}" %><span class="tag_count"><%= "(#{tag.taggings_count})" %></span>
+          <% end %>
+          <% end %>
+        </div>
+        <% else %>
+        <p>登録されているタグはありません</p>
+        <% end %>
+      </div>
+      <div class="tag_bottom"></div>
+    </div>
+  </div>
+  <div class="right_container col-md-5 offset-md-1">
+    <% if @tag.present? %>
+      <h2><%= "#{@tag}に関する投稿" %></h2>
+    <% end %>
+    <% if @posts.present? %>
+      <% @posts.each do |p| %>
+        <div class="post">
+          <div class="post_top">
+            <% if p.user.image? %>
+            <a class="link" href="/users/<%= p.user.id %>"><%= image_tag p.user.image.url, class: "icon_image" %></a>
+            <% else %>
+            <a class="link" href="/users/<%= p.user.id %>"><%= image_tag "default_user.png", class: "icon_image" %></a>
+            <% end %>
+            <a class="link user_name" href="/users/<%= p.user.id %>"><%= p.user.name %></a>
+          </div>
+          <% if @tags.present? %>
+            <div class="tags">
+              <% p.tag_list.each do |t| %>
+                <%= link_to "#{t}", posts_path(tag: "#{t}"), class: "tag link" %>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="post_middle link"><%= p.body %></div>
+          <div class="post_bottom">
+            <div class="post_bottom_left">
+              <div id="likes_buttons_<%= p.id %>">
+                <%= render partial: 'likes/like', locals: { post: p} %>
+              </div>
+              <% if user_signed_in? %>
+                <%= button_to post_path(p.id), method: :get, class: "link" do %>
+                <i class="far fa-comments"></i><%= p.comments.count %>
+              <% end %>
+              <% else %>
+                <i class="far fa-comments"></i><%= p.comments.count %>
+              <% end %>
+            </div>
+            <div class="post_bottom_right">
+              <div class="posted_time"><%= time_ago_in_words(p.created_at)+"前" %></div>
+            </div>
+          </div>
+          <% if user_signed_in? %>
+            <a href="/posts/<%= p.id %>"></a>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

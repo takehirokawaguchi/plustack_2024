@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env/development/database
+    volumes:
+      - "db_data:/var/lib/postgresql/data"
+  web:
+    build: .
+    env_file:
+      - .env/development/web
+      - .env/development/database
+    command: bash -c "bundle e rails s -b '0.0.0.0'"
+    volumes:
+      # - .:/usr/src/app
+      - .:/usr/src/app
+      - gem_cache:/gems
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+volumes:
+  db_data:
+  gem_cache:

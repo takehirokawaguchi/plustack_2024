@@ -1,0 +1,299 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+// ボタンのデフォルトデザイン解消
+@mixin delete_default {
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+//ヘッダー部分
+* {
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  display: flex;
+
+  li {
+      font-size: 14px;
+  }
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", メイリオ, Meiryo, "ＭＳ Ｐゴシック", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #e7e7e7;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
+
+// ヘッダー部分のあらゆるボタン
+.button {
+  @include delete_default;
+  background: none;
+  color: #fff;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// ヘッダー部分
+header {
+  width: 100%;
+  padding: 20px 4% 20px;
+  background-color: #204969;
+  position: fixed;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+
+  h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+  }
+
+  a {
+    display: inline-block;
+    color: #ffffff;
+    opacity: 0.7;
+
+    &:hover {
+      text-decoration: none;
+      color: #ffffff;
+      opacity: 1;
+    }
+  }
+
+  nav {
+    margin: 0 0 0 auto;
+  }
+
+}
+
+@media screen and (max-width:768px) {
+
+  /* 横並びの解除 */
+  ul {
+    display: inline-block;
+  }
+
+  /* ハンバーガーボタン */
+  .hamburger {
+    display : block;
+    position: fixed;
+    z-index : 3;
+    right : 32px;
+    top   : 12px;
+    width : 42px;
+    height: 42px;
+    cursor: pointer;
+    text-align: center;
+    span {
+      display : block;
+      position: absolute;
+      width   : 30px;
+      height  : 2px ;
+      left    : 6px;
+      background : #fff;
+      -webkit-transition: 0.3s ease-in-out;
+      -moz-transition   : 0.3s ease-in-out;
+      transition        : 0.3s ease-in-out;
+      &:nth-child(1) {
+        top: 10px;
+      }
+      &:nth-child(2) {
+        top: 20px;
+      }
+      &:nth-child(3) {
+        top: 30px;
+      }
+    }
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: block;
+      content: '';
+      width: 52px;
+      height: 52px;
+      margin: -32px 0 0 -32px;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 0, 0, 0);
+      transition: all .75s;
+    }
+  }
+  /* ナビ開いてる時のボタン */
+  .hamburger.active {
+    span {
+      z-index: 4;
+
+      &:nth-child(1) {
+        width: 12px;
+        -webkit-transform:    translate(1px,3px) rotate(315deg);
+        -moz-transform   : translate(1px,3px) rotate(315deg);
+        transform        : translate(2px,3px) rotate(315deg);
+      }
+      &:nth-child(2) {
+        width : 24px;
+        transform: translate(0px,0px)rotate(270deg);
+      }
+      &:nth-child(3) {
+        // top: 16px;
+        width: 12px;
+        -webkit-transform: translate(11px,-17px) rotate(-45deg);
+        -moz-transform   : translate(11px,-17px) rotate(45deg);
+        transform        : translate(10px,-17px) rotate(45deg);
+      }
+    }
+  }
+
+  nav.globalMenuSp {
+    position: fixed;
+    z-index : 2;
+    top  : 0;
+    left : 0;
+    color: #000;
+    background: #fff;
+    text-align: center;
+    transform: translateY(-100%);
+    transition: all 0.6s;
+    width: 100%;
+    ul {
+      background: #204969;
+      margin: 0 auto;
+      padding: 0;
+      width: 100%;
+      li {
+        list-style-type: none;
+        padding: 0;
+        width: 100%;
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+      a {
+        display: block;
+        color: #fff;
+        opacity: 0.8;
+        padding: 1.5em 0;
+        text-decoration :none;
+
+        &:hover{
+          opacity: 1.0;
+        }
+      }
+    }
+  }
+  /* このクラスを、jQueryで付与・削除する */
+  nav.globalMenuSp.active {
+    transform: translateY(0%);
+  }
+}
+
+
+// フラッシュメッセージ
+.notification {
+  margin-bottom: 10px;
+
+  .notice {
+    padding: 10px 0;
+    background-color: #D4EDD9;
+    color: #155724;
+  }
+
+  .alert {
+    padding: 10px 0;
+    color: #721C23;
+    background-color: #F8D7D9;
+  }
+}
+
+// アイコン画像
+.icon_image {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  //サイズ指定
+  border-radius: 100px;
+  //画像を丸くする
+  object-fit: cover;
+  //タテヨコ比を変えないままトリミング
+  z-index: 4;
+
+  &:hover {
+    opacity: 0.7;
+    transition: all 0.4s;
+  }
+}
+
+.large_icon_image {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  //サイズ指定
+  border-radius: 100px;
+  //画像を丸くする
+  object-fit: cover;
+  //タテヨコ比を変えないままトリミング
+  z-index: 4;
+
+  &:hover {
+    opacity: 0.7;
+    transition: all 0.4s;
+  }
+}
+
+// いいねボタン
+button {
+  @include delete_default;
+  background-color: transparent;
+}
+
+.before_liked {
+  color: #aab8c2;
+}
+
+.after_liked {
+  color: #e9385b;
+}
+
+// フッター
+footer {
+  border-top: 1px solid #000;
+  padding-top: 10px;
+  text-align: center;
+}

@@ -1,0 +1,58 @@
+// Place all the styles related to the tasks controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+@import "posts";
+
+// task#index
+.show_tasks {
+  @include form;
+  width: 40%;
+  margin-bottom: 20px;
+
+  table {
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 10px 15px;
+  }
+
+  .status_btn {
+    color: #FFF;
+  }
+
+  h3 {
+    border-bottom: 1px solid #08FFC8;
+  }
+
+  .recommend_create {
+    display: block;
+    margin: 10px 0 20px;
+  }
+
+  .create_tasks {
+    display: none;
+  }
+
+}
+
+
+
+.edit_task {
+  @include form;
+  width: 40%;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 20px;
+
+  h2 {
+    border-bottom: 1px solid #08FFC8;
+  }
+}
+
+
+
+@media screen and (max-width:768px) {
+
+  .show_tasks, .create_tasks, .edit_task {
+    width: 100%;
+  }
+}

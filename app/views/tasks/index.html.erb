@@ -1,0 +1,85 @@
+<div class="show_tasks">
+  <h3>目標一覧</h3>
+  <% user_tasks = @tasks.select do |f| %>
+    <% current_user.id == f.user_id  %>
+  <% end %>
+  <% if user_tasks.present? %>
+  <table>
+    <thead>
+      <tr>
+        <th>状況</th>
+        <th>期限</th>
+        <th>目標</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% user_tasks.each do |t| %>
+      <tr>
+        <td>
+          <% if t.state == "未達成" %>
+          <a class="badge badge-danger">
+          <% elsif t.state =="達成済" %>
+          <a class="badge badge-success">
+          <% elsif t.state =="進行中" %>
+          <a class="badge badge-info">
+          <% end %>
+          <div class="status_btn"><%= t.state %></div>
+          </a>
+        </td>
+        <td><%= t.limit_date %></td>
+        <td><%= t.task %></td>
+        <!-- 次のタスク詳細取得画面へのリンク -->
+        <td><a href="/tasks/<%= t.id %>" class="btn btn-info">編集<i class="far fa-edit"></i></a></td>
+        <td>
+          <form method="POST" action="/tasks/<%= t.id %>">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <button type="submit" class="btn btn-secondary">削除<i class="fas fa-trash-alt"></i></button>
+          </form>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% else %>
+    <p>まだ目標がありません。</p>
+  <% end %>
+  <a href="#" class="recommend_create">＋目標を作成する</a>
+  <form method="POST" action="/tasks" class="create_tasks">
+    <h4>作成</h4>
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <div>
+      <label for="task">目標:</label>
+      <input id="task" name="task" type="text" required>
+    </div>
+    <div>
+      <label>状況:</label>
+      <select name="state">
+        <% @status.each_with_index do |s,i| %>
+        <option value="<%= s %>"><%= s %></option>
+        <% end %>
+      </select>
+    </div>
+    <div>
+      <label>期限:</label>
+      <input type="date" name="limit_date" required>
+    </div>
+    <p><button type="submit" class="btn btn-success">作成</button></p>
+  </form>
+</div>
+
+<script>
+  $('.recommend_create').on('click', (e) => {
+
+    e.preventDefault();
+    if ($('.create_tasks').hasClass('open')) {
+      $('.create_tasks').hide();
+      $('.create_tasks').removeClass('open');
+      $('.recommend_create').text("＋目標を作成する")
+    } else {
+      $('.create_tasks').show();
+      $('.create_tasks').addClass('open');
+      $('.recommend_create').text("ー閉じる")
+    }
+  });
+</script>

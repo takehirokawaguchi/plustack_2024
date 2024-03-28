@@ -1,0 +1,182 @@
+<div class="row">
+  <div class="left-container col-md-6">
+    <div class="user_information">
+      <h3>ユーザー情報</h3>
+      <div class="information_top">
+        <% if @user.image? %>
+        <%= image_tag @user.image.url, class: "icon_image large" %>
+        <% else %>
+        <%= image_tag "default_user.png", class: "icon_image large" %>
+        <% end %>
+        <div class="user_name"><%= @user.name %></div>
+      </div>
+      <div class="information_middle">
+        <div class="row">
+          <div><%= @user.profile %></div>
+        </div>
+      </div>
+      <div class="information_bottom">
+        <% if current_user.id == @user.id && @user.email != "guest@example.com" %>
+          <%= link_to("編集", edit_user_registration_path, {class: "btn btn-info"}) %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="tasks-container">
+      <div class="tasks">
+        <h3>目標一覧</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>状況</th>
+              <th>目標</th>
+              <th>期限</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @tasks.each do |t| %>
+            <tr>
+              <td>
+                <% if t.state == "未達成" %>
+                <a class="badge badge-danger">
+                <% elsif t.state =="達成済" %>
+                <a class="badge badge-success">
+                <% elsif t.state =="進行中" %>
+                <a class="badge badge-info">
+                <% end %>
+                <div class="status_btn"><%= t.state %></div>
+                </a>
+              </td>
+              <td><%= t.task %></td>
+              <td><%= t.limit_date %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <a href="/tasks">自分の目標を見る</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-container col-md-6">
+    <div class="my_actions">
+      <ul class="tabs-menu">
+        <li>
+          <div class="tab-menu-post">投稿</div>
+        </li>
+        <li>
+          <div class="tab-menu-like">いいね</div>
+        </li>
+      </ul>
+      <section class="tabs-content">
+        <section class="post_tab">
+          <% @user.posts.each do |p| %>
+          <div class="post">
+            <div class="post_top">
+              <% if p.user.image? %>
+              <%= image_tag p.user.image.url, class: "icon_image" %>
+              <% else %>
+              <%= image_tag "default_user.png", class: "icon_image" %>
+              <% end %>
+              <a class="link user_name""><%= p.user.name %></a>
+            </div>
+            <% if @tags.present? %>
+            <div class="tags">
+              <% p.tag_list.each do |t| %>
+              <%= link_to "#{t}", posts_path(tag: "#{t}"), class: "tag link" %>
+              <% end %>
+            </div>
+            <% end %>
+            <div class="post_middle link"><%= p.body %></div>
+            <div class="post_bottom">
+              <div class="post_bottom_left">
+                <div id="likes_buttons_<%= p.id %>">
+                  <%= render partial: 'likes/like', locals: { post: p} %>
+                </div>
+                <% if user_signed_in? %>
+                <%= button_to post_path(p.id), method: :get, class: "link" do %>
+                <i class="far fa-comments"></i><%= p.comments.count %>
+                <% end %>
+                <% else %>
+                <i class="far fa-comments"></i><%= p.comments.count %>
+                <% end %>
+              </div>
+              <div class="post_bottom_right">
+                <div class="posted_time"><%= time_ago_in_words(p.created_at)+"前" %></div>
+              </div>
+            </div>
+          </div>
+          <% end %>
+        </section>
+        <section class="like_tab">
+          <% @user.liked_posts.each do |p| %>
+          <div class="post">
+            <div class="post_top">
+              <% if p.user.image? %>
+              <a class="link" href="/users/<%= p.user.id %>"><%= image_tag p.user.image.url, class: "icon_image" %></a>
+              <% else %>
+              <a class="link" href="/users/<%= p.user.id %>"><%= image_tag "default_user.png", class: "icon_image" %></a>
+              <% end %>
+              <a class="link user_name" href="/users/<%= p.user.id %>"><%= p.user.name %></a>
+            </div>
+            <% if @tags.present? %>
+            <div class="tags">
+              <% p.tag_list.each do |t| %>
+              <%= link_to "#{t}", posts_path(tag: "#{t}"), class: "tag link" %>
+              <% end %>
+            </div>
+            <% end %>
+            <div class="post_middle link"><%= p.body %></div>
+            <div class="post_bottom">
+              <div class="post_bottom_left">
+                <%# いいねボタン %>
+                <div id="likes_buttons_<%= p.id %>">
+                  <%# likes/_like.html.erbから取得 %>
+                  <%= render partial: 'likes/like', locals: { post: p} %>
+                </div>
+                <%# ここまで %>
+                <% if user_signed_in? %>
+                <%= button_to post_path(p.id), method: :get, class: "link" do %>
+                <i class="far fa-comments"></i><%= p.comments.count %>
+                <% end %>
+                <% else %>
+                <i class="far fa-comments"></i><%= p.comments.count %>
+                <% end %>
+              </div>
+              <div class="post_bottom_right">
+                <div class="posted_time"><%= time_ago_in_words(p.created_at)+"前" %></div>
+              </div>
+            </div>
+          </div>
+          <% end %>
+        </section>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  var showTab = (selector) => {
+
+    console.log(selector);
+    $('.tabs-menu > li').removeClass('active');
+    $('.tabs-content > section').hide();
+    $(`.tabs-menu .${selector}`)
+      .parent('li')
+      .addClass('active');
+    if (selector == 'tab-menu-post') {
+      $('.post_tab').show();
+    } else {
+      $('.like_tab').show();
+    }
+  };
+
+  $('.tabs-menu div').on('click', (e) => {
+
+    e.preventDefault();
+    const selector = $(e.target).attr('class');
+    showTab(selector);
+  });
+
+  showTab('tab-menu-post');
+</script>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Plustack</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_importmap_tags %>
+</head>
+
+<body>
+  <header>
+    <div class="header_left">
+      <h1><a href="/posts">Plustack</a></h1>
+    </div>
+    <div class="header_right">
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+        <nav class="globalMenuSp">
+          <ul>
+            <% if user_signed_in? %>
+              <li>
+                <%= button_to new_post_path, method: :get, class: 'btn button' do %>
+                <i class="fas fa-pen"></i>投稿
+                <% end %>
+              </li>
+              <li>
+                <%= button_to tasks_path, method: :get, class: 'btn button' do %>
+                <i class="fas fa-tasks"></i>目標
+                <% end %>
+              </li>
+              <li>
+                <%= button_to user_path(current_user.id), method: :get, class: 'btn button' do %>
+                <i class="far fa-user-circle"></i>マイページ
+                <% end %>
+              </li>
+              <li>
+                <%= button_to destroy_user_session_path, method: :delete, class: 'btn button' do %>
+                <i class="fas fa-sign-out-alt"></i>ログアウト
+                <% end %>
+              </li>
+              <% else %>
+              <li><%= button_to "新規登録", new_user_registration_path, class: 'btn button', method: :get %></li>
+              <li><%= button_to "ログイン", new_user_session_path, class: 'btn button', method: :get %></li>
+              <li><%= button_to 'ゲストログイン', posts_guest_sign_in_path,  class: 'btn button', method: :post %></li>
+            <% end %>
+          </ul>
+        </nav>
+    </div>
+  </header>
+  <div class="content">
+    <div class="notification">
+      <% flash.each do |key, value| %>
+        <%= content_tag(:div, value, class: key) %>
+      <% end %>
+    </div>
+    <%= yield %>
+  </div>
+  <footer>
+    <p>Copyright ©︎ 2024 PLUSTACK All Rights Reserved.</p>
+  </footer>
+  <script>
+    $(function() {
+
+      var headerHeight = $("header").height();
+      $("body").css("margin-top", headerHeight + 60)
+
+      $('.hamburger').click(function() {
+        $(this).toggleClass('active');
+        if ($(this).hasClass('active')) {
+          $('.globalMenuSp').addClass('active');
+        } else {
+          $('.globalMenuSp').removeClass('active');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+<%# class="edit_post" %>
+<%= form_for @post do |f| %>
+  <div class="field">
+    <h3>投稿を編集する</h3>
+    <div class="input_tag">
+      <p>タグ：</p>
+      <%= f.text_field :tag_list, value: @post.tag_list.join(','), class: 'form_control', placeholder: "例 朝活,筋トレ" %>
+    </div>
+    <div class="input_content">
+      <p>投稿内容：</p>
+      <%= f.text_area :body %>
+    </div>
+  </div>
+  <%= f.submit "編集する", class: "btn btn-info" %>
+<% end %>
+<%= link_to "投稿一覧に戻る", posts_path %>
