@@ -1,1 +1,8 @@
-$('#likes_buttons_<%= @post.id %>').html("<%= j(render partial: 'likes/like', locals: {post: @post}) %>");
+# $('#likes_buttons_<%= @post.id %>').html("<%= j(render partial: 'likes/like', locals: {post: @post}) %>")
+$('#likes_buttons_<%= j(post.id) %> .like-button').on('click', function(event) {
+  event.preventDefault();
+  $(this).removeClass('after_liked')
+         .addClass('before_liked')
+         .find('.like-count')
+         .html('<%= j(post.likes.count) %>');
+});
